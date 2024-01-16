@@ -5,10 +5,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+	String jdbcUrl = Configuration.getProperty("jdbcUrl");
         String username = Configuration.getProperty("username");
         String password = Configuration.getProperty("password");
 
-        try (DbContext db = new DbContext("jdbc:postgresql://pgsql3.mif/studentu", username, password)) {
+        try (DbContext db = new DbContext(jdbcUrl, username, password)) {
             Map<Integer, Transaction> transactions = new TreeMap<>(Map.ofEntries(
                 Map.entry(1, new ShowEmployeesTransaction(db)),
                 Map.entry(2, new ShowClientsTransaction(db)),
@@ -23,7 +24,7 @@ public class Main {
             app.run();
         } catch (Exception ex) {
             System.out.println(ex);
-	    } finally {
+    	} finally {
             if (scanner != null)
                 scanner.close();
         }
